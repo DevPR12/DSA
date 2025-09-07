@@ -1,14 +1,13 @@
 class Solution {
     public int calculate(String s) {
-        int n = s.length();
-         int result = 0;
-        int sign = 1;  
-        int num = 0;
+        return eval(s.replaceAll(" ", ""), new int[]{0});
+    }
 
-        Stack<Integer> stack = new Stack<>();
+    private int eval(String s, int[] idx) {
+        int num = 0, result = 0, sign = 1;
 
-        for (int i = 0; i < n; i++) {
-            char c = s.charAt(i);
+        while (idx[0] < s.length()) {
+            char c = s.charAt(idx[0]);
 
             if (Character.isDigit(c)) {
                 num = num * 10 + (c - '0');
@@ -24,23 +23,18 @@ class Solution {
                 sign = -1;
             } 
             else if (c == '(') {
-         
-                stack.push(result);
-                stack.push(sign);
-                result = 0;
-                sign = 1;
+                idx[0]++; 
+                num = eval(s, idx);
             } 
             else if (c == ')') {
                 result += sign * num;
-                num = 0;
-                result *= stack.pop(); 
-                result += stack.pop(); 
+                return result;
             }
+
+            idx[0]++;
         }
 
-        if (num != 0) {
-            result += sign * num;
-        
-         } return result;
+        result += sign * num;
+        return result;
     }
 }
